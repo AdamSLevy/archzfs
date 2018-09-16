@@ -442,7 +442,7 @@ cmd_regex() {
     # $1: the cmd command to run
     # $2: The Perl regex to match with
     run_cmd_no_output "${1}"
-    
+
     if [[ ${dry_run} -eq 1 ]]; then
         return 0
     fi
@@ -486,7 +486,7 @@ check_webpage() {
     # $1: The url to scrape
     # $2: The Perl regex to match with
     # $3: Expect match
-    
+
     if ! get_webpage "$1" "$2"; then
         return $?
     fi
@@ -799,7 +799,7 @@ git_check_repo() {
 
         if [[ ! -d "${repopath}"  ]]; then
             msg2 "Cloning repo '${repopath}'"
-            
+
             # clone into temp directory
             if [[ ! -d "${temprepopath}"  ]]; then
                 run_cmd_no_dry_run "git clone --mirror '${url}' '${temprepopath}'"
@@ -808,11 +808,11 @@ git_check_repo() {
                     exit 1
                 fi
             fi
-            
+
             # copy into package directory from temp
             run_cmd_no_dry_run "cp -r '${temprepopath}' '${repopath}'"
         fi
-    
+
         msg2 "Updating repo '${repopath}'"
         run_cmd_no_dry_run "cd ${repopath} && git fetch --all -p"
         if [[ ${run_cmd_return} -ne 0 ]]; then
