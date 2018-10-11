@@ -124,6 +124,17 @@ generate_package_files() {
     fi
 
     # Finally, generate the update packages ...
+
+    # skip spl for git utils
+    if [[ "${kernel_name}" == "_utils" ]] && [[ ! ${archzfs_package_group} =~ -git$ ]] && [[ ! ${archzfs_package_group} =~ -rc$ ]]; then
+        msg2 "Removing old spl-utils patches (if any)"
+        run_cmd_no_output "rm -f ${spl_utils_pkgbuild_path}/*.patch"
+        msg2 "Copying spl-utils patches (if any)"
+        run_cmd_no_output "find ${script_dir}/src/spl-utils -name \*.patch -exec cp {} ${spl_utils_pkgbuild_path} \;"
+        msg2 "Creating spl-utils PKGBUILD"
+        run_cmd_no_output "source ${script_dir}/src/spl-utils/PKGBUILD.sh"
+    fi
+
     if [[ "${kernel_name}" == "_utils" ]]; then
         msg2 "Removing old zfs-utils patches (if any)"
         run_cmd_no_output "rm -f ${zfs_utils_pkgbuild_path}/*.patch"
@@ -147,6 +158,18 @@ generate_package_files() {
         msg2 "Creating zfs-dkms PKGBUILD"
         run_cmd_no_output "source ${script_dir}/src/zfs-dkms/PKGBUILD.sh"
     else
+        # skip spl for git packages
+        if [[ ! ${archzfs_package_group} =~ -git$ ]] && [[ ! ${archzfs_package_group} =~ -rc$ ]]; then
+            msg2 "Removing old spl patches (if any)"
+            run_cmd_no_output "rm -f ${spl_pkgbuild_path}/*.patch"
+            msg2 "Copying spl patches (if any)"
+            run_cmd_no_output "find ${script_dir}/src/spl -name \*.patch -exec cp {} ${spl_pkgbuild_path} \;"
+            msg2 "Creating spl PKGBUILD"
+            run_cmd_no_output "source ${script_dir}/src/spl/PKGBUILD.sh"
+            #msg2 "Creating spl.install"
+            #run_cmd_no_output "source ${script_dir}/src/spl/spl.install.sh"
+        fi
+
         msg2 "Removing old zfs patches (if any)"
         run_cmd_no_output "rm -f ${zfs_pkgbuild_path}/*.patch"
         msg2 "Copying zfs patches (if any)"

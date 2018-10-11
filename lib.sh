@@ -482,6 +482,22 @@ get_repo_package() {
     cmd_regex "curl -sL ${1} | tar tzv --exclude='*/*'" "${2}"
 }
 
+get_git_repo_package() {
+    local kernel="$1"
+    local repo="https://git.uplinklabs.net/steven/projects/archlinux/ec2/ec2-packages.git"
+    local clonedir=/tmp/ec2-packages
+    if [[ ! -d "$clonedir" ]]; then
+        rm -f "$clonedir"
+        git clone --depth 1 "$repo" "$clonedir"
+    else
+        cd "$clonedir" && git pull
+    fi
+    local pkgver="$(grep "^pkgver=" $clonedir/$kernel/PKGBUILD | awk -F= '{print $2}')"
+    local pkgrel="$(grep "^pkgrel=" $clonedir/$kernel/PKGBUILD | awk -F= '{print $2}')"
+    git_repo_output="${pkgver}-${pkgrel}"
+    debug "git_repo_output $git_repo_output"
+}
+
 check_webpage() {
     # $1: The url to scrape
     # $2: The Perl regex to match with

@@ -33,15 +33,15 @@ header="\
 #"
 
 get_kernel_options() {
-    msg "Checking the online package database for the latest x86_64 linux-ec2-lts kernel version..."
-    #if ! get_webpage "https://git.uplinklabs.net/steven/projects/archlinux/ec2/ec2-packages.git/tree/linux-ec2-lts/PKGBUILD" "pkgver"; then
-    #    exit 1
-    #fi
-    kernel_version=4.14.70
+    msg "Checking Uplink Labs ec2 repo for the latest linux kernel version..."
+    if ! get_git_repo_package "linux-ec2-lts"; then
+        exit 1
+    fi
+    kernel_version="$git_repo_output"
     kernel_version_full=$(kernel_version_full ${kernel_version})
     kernel_version_full_pkgver=$(kernel_version_full_no_hyphen ${kernel_version})
     kernel_version_major=${kernel_version%-*}
-    kernel_mod_path="${kernel_version_full}-lts"
+    kernel_mod_path="${kernel_version_full}-ec2-lts"
     linux_depends="\"linux-ec2-lts=\${_kernelver}\""
     linux_headers_depends="\"linux-ec2-lts-headers=\${_kernelver}\""
 }
