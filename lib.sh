@@ -486,12 +486,11 @@ get_git_repo_package() {
     local kernel="$1"
     local repo="https://git.uplinklabs.net/steven/projects/archlinux/ec2/ec2-packages.git"
     local clonedir=/tmp/ec2-packages
+    local cmd="cd ${clonedir} && git pull"
     if [[ ! -d "$clonedir" ]]; then
-        rm -f "$clonedir"
-        git clone --depth 1 "$repo" "$clonedir"
-    else
-        cd "$clonedir" && git pull
+        cmd="rm -f ${clonedir} && git clone --depth 1 ${repo} ${clonedir}"
     fi
+    run_cmd_no_output "${cmd}"
     local pkgver="$(grep "^pkgver=" $clonedir/$kernel/PKGBUILD | awk -F= '{print $2}')"
     local pkgrel="$(grep "^pkgrel=" $clonedir/$kernel/PKGBUILD | awk -F= '{print $2}')"
     git_repo_output="${pkgver}-${pkgrel}"
