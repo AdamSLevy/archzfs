@@ -494,6 +494,7 @@ get_git_repo_package() {
     local pkgver="$(grep "^pkgver=" $clonedir/$kernel/PKGBUILD | awk -F= '{print $2}')"
     local pkgrel="$(grep "^pkgrel=" $clonedir/$kernel/PKGBUILD | awk -F= '{print $2}')"
     git_repo_output="${pkgver}-${pkgrel}"
+    #git_repo_output="4.14.82-1"
     debug "git_repo_output $git_repo_output"
 }
 
