@@ -69,25 +69,25 @@ update_linux_lts_pkgbuilds() {
     zfs_makedepends="\"${spl_pkgname}-headers\""
 }
 
-update_linux_lts_git_pkgbuilds() {
-    get_kernel_options
-    pkg_list=("zfs-linux-ec2-lts-git")
-    archzfs_package_group="archzfs-linux-ec2-lts-git"
-    zfs_pkgver="" # Set later by call to git_calc_pkgver
-    zfs_pkgrel=${pkgrel_git}
-    zfs_conflicts="'zfs-linux-ec2-lts' 'spl-linux-ec2-lts-git' 'spl-linux-ec2-lts'"
-    spl_pkgname=""
-    zfs_pkgname="zfs-linux-ec2-lts-git"
-    zfs_pkgbuild_path="packages/${kernel_name}/${zfs_pkgname}"
-    zfs_replaces='replaces=("spl-linux-ec2-lts-git")'
-    zfs_src_hash="SKIP"
-    zfs_makedepends="\"git\""
-    zfs_workdir="\${srcdir}/zfs"
-    if have_command "update"; then
-        git_check_repo
-        git_calc_pkgver
-    fi
-    zfs_utils_pkgname="zfs-utils-git=\${_zfsver}"
-    zfs_set_commit="_commit='${latest_zfs_git_commit}'"
-    zfs_src_target="git+${zfs_git_url}#commit=\${_commit}"
-}
+#update_linux_lts_git_pkgbuilds() {
+#    get_kernel_options
+#    pkg_list=("zfs-linux-ec2-lts-git")
+#    archzfs_package_group="archzfs-linux-ec2-lts-git"
+#    zfs_pkgver="" # Set later by call to git_calc_pkgver
+#    zfs_pkgrel=${pkgrel_git}
+#    zfs_conflicts="'zfs-linux-ec2-lts' 'spl-linux-ec2-lts-git' 'spl-linux-ec2-lts'"
+#    spl_pkgname=""
+#    zfs_pkgname="zfs-linux-ec2-lts-git"
+#    zfs_pkgbuild_path="packages/${kernel_name}/${zfs_pkgname}"
+#    zfs_replaces='replaces=("spl-linux-ec2-lts-git")'
+#    zfs_src_hash="SKIP"
+#    zfs_makedepends="\"git\""
+#    zfs_workdir="\${srcdir}/zfs"
+#    if have_command "update"; then
+#        git_check_repo
+#        git_calc_pkgver
+#    fi
+#    zfs_utils_pkgname="zfs-utils-git=\${_zfsver}"
+#    zfs_set_commit="_commit='${latest_zfs_git_commit}'"
+#    zfs_src_target="git+${zfs_git_url}#commit=\${_commit}"
+#}

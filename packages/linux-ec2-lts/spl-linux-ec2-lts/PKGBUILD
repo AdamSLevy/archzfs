@@ -18,8 +18,8 @@
 pkgbase="spl-linux-ec2-lts"
 pkgname=("spl-linux-ec2-lts" "spl-linux-ec2-lts-headers")
 _splver="0.7.12"
-_kernelver="4.14.82-1"
-_extramodules="4.14.82-1-ec2-lts"
+_kernelver="4.19.21-1"
+_extramodules="4.19.21-1-ec2-lts"
 
 pkgver="${_splver}_$(echo ${_kernelver} | sed s/-/./g)"
 pkgrel=1
@@ -56,7 +56,7 @@ package_spl-linux-ec2-lts() {
 package_spl-linux-ec2-lts-headers() {
     pkgdesc="Solaris Porting Layer kernel headers."
     provides=("spl-headers")
-    conflicts=("spl-dkms" "spl-dkms-git" "spl-headers")
+    conflicts=("spl-dkms" "spl-dkms-git" "spl-dkms-rc" "spl-headers")
     cd "${srcdir}/spl-${_splver}"
     make DESTDIR="${pkgdir}" install
     rm -r "${pkgdir}/lib"
