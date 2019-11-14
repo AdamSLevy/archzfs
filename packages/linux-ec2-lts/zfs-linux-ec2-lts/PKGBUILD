@@ -17,32 +17,26 @@
 #
 pkgbase="zfs-linux-ec2-lts"
 pkgname=("zfs-linux-ec2-lts" "zfs-linux-ec2-lts-headers")
-_zfsver="0.7.12"
-_kernelver="4.19.23-1"
-_extramodules="4.19.23-1-ec2-lts"
+_zfsver="0.8.2"
+_kernelver="4.19.83-1"
+_extramodules="4.19.83-1-ec2-lts"
 
 pkgver="${_zfsver}_$(echo ${_kernelver} | sed s/-/./g)"
 pkgrel=1
-makedepends=("linux-ec2-lts-headers=${_kernelver}" "spl-linux-ec2-lts-headers")
+makedepends=("linux-ec2-lts-headers=${_kernelver}")
 arch=("x86_64")
-url="http://zfsonlinux.org/"
-source=("https://github.com/zfsonlinux/zfs/releases/download/zfs-${_zfsver}/zfs-${_zfsver}.tar.gz"
-        "upstream-4f981f6-additional-fixes-for-current_kernel_time-in-4.20.patch")
-sha256sums=("720e3b221c1ba5d4c18c990e48b86a2eb613575a0c3cc84c0aa784b17b7c2848"
-            "6f27c3dae57c424e06aec31df6c1e1a821e547aa4e933f2f9b894b5e6762b52d")
+url="https://zfsonlinux.org/"
+source=("https://github.com/zfsonlinux/zfs/releases/download/zfs-${_zfsver}/zfs-${_zfsver}.tar.gz")
+sha256sums=("47608e257c8ecebb918014ef1da6172c3a45d990885891af18e80f5cc28beab8")
 license=("CDDL")
-depends=("kmod" 'spl-linux-ec2-lts' "zfs-utils=${_zfsver}" "linux-ec2-lts=${_kernelver}")
-prepare() {
-    cd "${srcdir}/zfs-${_zfsver}"
-    patch -Np1 -i ${srcdir}/upstream-4f981f6-additional-fixes-for-current_kernel_time-in-4.20.patch
-}
+depends=("kmod" "zfs-utils=${_zfsver}" "linux-ec2-lts=${_kernelver}")
 
 build() {
     cd "${srcdir}/zfs-${_zfsver}"
     ./autogen.sh
     ./configure --prefix=/usr --sysconfdir=/etc --sbindir=/usr/bin --libdir=/usr/lib \
                 --datadir=/usr/share --includedir=/usr/include --with-udevdir=/lib/udev \
-                --libexecdir=/usr/lib/zfs-${zfsver} --with-config=kernel \
+                --libexecdir=/usr/lib/zfs-${_zfsver} --with-config=kernel \
                 --with-linux=/usr/lib/modules/${_extramodules}/build \
                 --with-linux-obj=/usr/lib/modules/${_extramodules}/build
     make
@@ -51,9 +45,10 @@ build() {
 package_zfs-linux-ec2-lts() {
     pkgdesc="Kernel modules for the Zettabyte File System."
     install=zfs.install
-    provides=("zfs")
+    provides=("zfs" "spl")
     groups=("archzfs-linux-ec2-lts")
-    conflicts=("zfs-dkms" "zfs-dkms-git" "zfs-dkms-rc" 'zfs-linux-ec2-lts-git')
+    conflicts=("zfs-dkms" "zfs-dkms-git" "zfs-dkms-rc" "spl-dkms" "spl-dkms-git" 'zfs-linux-ec2-lts-git' 'zfs-linux-ec2-lts-rc' 'spl-linux-ec2-lts')
+    replaces=("spl-linux-lts")
     cd "${srcdir}/zfs-${_zfsver}"
     make DESTDIR="${pkgdir}" install
     cp -r "${pkgdir}"/{lib,usr}
@@ -64,8 +59,8 @@ package_zfs-linux-ec2-lts() {
 
 package_zfs-linux-ec2-lts-headers() {
     pkgdesc="Kernel headers for the Zettabyte File System."
-    provides=("zfs-headers")
-    conflicts=("zfs-headers" "zfs-dkms" "zfs-dkms-git" "zfs-dkms-rc")
+    provides=("zfs-headers" "spl-headers")
+    conflicts=("zfs-headers" "zfs-dkms" "zfs-dkms-git" "zfs-dkms-rc" "spl-dkms" "spl-dkms-git" "spl-headers")
     cd "${srcdir}/zfs-${_zfsver}"
     make DESTDIR="${pkgdir}" install
     rm -r "${pkgdir}/lib"
